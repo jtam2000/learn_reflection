@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.github.jtam2000.testreflectinfo.TestReflectInfo" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-09-08T22:48:48" hostname="JasonIMac2013" time="0.064">
+  <properties/>
+  <testcase name="test_getMethodDetails" classname="com.github.jtam2000.testreflectinfo.TestReflectInfo" time="0.064"/>
+  <system-out><![CDATA[=> public void methodWithParameters (int myInt, String myString, Instant instant)
+		package:		package com.github.jtam2000.classdata
+		class:		Person
+		accessor:		public
+		returns:		void
+		method name:		methodWithParameters
+		parameters:		[int myInt, String myString, Instant instant]
+		exceptions:		IllegalArgumentException
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

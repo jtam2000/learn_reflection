@@ -1,0 +1,13 @@
+# Macro action items for this project, not cover within the code
+
+09/08/2020
+
+what is synthetic methods and bridge methods  in java:
+https://www.baeldung.com/java-synthetic
+    anything introduced by javac that does not have any actual user provided code:
+
+    "Any constructs introduced by a Java compiler that do not have a corresponding construct
+    in the source code must be marked as synthetic, except for default constructors,
+    the class initialization method, and the values and valueOf methods of the Enum class."
+
+what is native keyword> :  code that is native in another non-java language (like c++)
