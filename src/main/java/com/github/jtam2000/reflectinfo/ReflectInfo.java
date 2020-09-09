@@ -97,6 +97,8 @@ public class ReflectInfo {
         class_name
 
     }
+
+    //for constructors
     public static Map<MethodDetail, String> getMethodDetails(Executable method) {
 
         /* sample output
@@ -160,7 +162,7 @@ public class ReflectInfo {
         return methodDetails;
     }
 
-    public static void printMethodDetails(Executable method) {
+    public static void printMethodDetails(Constructor<?> method) {
 
         Map<MethodDetail, String> details = getMethodDetails(method);
         String tabs = "\t\t";
