@@ -1,24 +1,27 @@
 package com.github.jtam2000.reflectinfo;
 
-import java.lang.reflect.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.github.jtam2000.reflectinfo.ReflectInfo.MethodDetail.*;
+import static com.github.jtam2000.reflectinfo.ReflectInfo.MethodDetail.accessor;
+import static com.github.jtam2000.reflectinfo.ReflectInfo.MethodDetail.class_name;
+import static com.github.jtam2000.reflectinfo.ReflectInfo.MethodDetail.class_package;
+import static com.github.jtam2000.reflectinfo.ReflectInfo.MethodDetail.exceptions;
+import static com.github.jtam2000.reflectinfo.ReflectInfo.MethodDetail.javadoc_name;
+import static com.github.jtam2000.reflectinfo.ReflectInfo.MethodDetail.method_name;
+import static com.github.jtam2000.reflectinfo.ReflectInfo.MethodDetail.parameters;
+import static com.github.jtam2000.reflectinfo.ReflectInfo.MethodDetail.returns;
 
 public class ReflectInfo {
-
-    public static void main(String[] args) {
-
-        System.out.printf("%nHello World, it is now => %s%n", LocalDateTime.now().
-                format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
-    }
 
     public static List<Field> getFields(Class<?> inputClass) {
 
@@ -47,8 +50,13 @@ public class ReflectInfo {
 
         List<Method> methods = getMethodsByName(inputClass, methodName);
 
+        System.out.println("Methods are: " + methods);
+
         return methods.stream()
-                .filter(m -> m.getName().equals(methodName))
+                .filter(m -> {
+                    m.setAccessible(true);
+                    return m.getName().equals(methodName);
+                })
                 .limit(1)
                 .collect(Collectors.toList()).get(0);
 
@@ -67,9 +75,16 @@ public class ReflectInfo {
 
     public static List<Method> getMethodsByName(Class<?> inputClass, String methodName) {
 
-        return Arrays.stream(inputClass.getMethods())
-                .filter(m -> m.getName().equals(methodName))
+        List<Method> methods=Arrays.stream(inputClass.getMethods())
+                .filter(m ->  m.getName().equals(methodName))
                 .collect(Collectors.toList());
+
+        //if not in Methods, then must be in declared methods that is NOT PUBLIC
+        methods = methods.size()>0 ? methods:
+                Arrays.stream(inputClass.getDeclaredMethods())
+                        .filter(m ->  m.getName().equals(methodName))
+                        .collect(Collectors.toList());
+        return methods;
     }
 
     public static List<String> getMethodParameters(Executable method) {
@@ -86,7 +101,7 @@ public class ReflectInfo {
         return Modifier.toString(modifier);
     }
 
-    enum MethodDetail {
+    public enum MethodDetail {
         javadoc_name,
         method_name,
         accessor,
@@ -134,6 +149,7 @@ public class ReflectInfo {
 
         return methodDetails;
     }
+
     public static Map<MethodDetail, String> getMethodDetails(Method method) {
 
         /* sample output
@@ -170,11 +186,13 @@ public class ReflectInfo {
         System.out.println("=> " + details.get(javadoc_name));
         System.out.println(tabs + "package:" + tabs + details.get(class_package));
         System.out.println(tabs + "class:" + tabs + details.get(class_name));
+        System.out.println(tabs + "accessor:" + tabs + details.get(accessor));
         System.out.println(tabs + "method name:" + tabs + details.get(method_name));
         System.out.println(tabs + "parameters:" + tabs + details.get(parameters));
         System.out.println(tabs + "exceptions:" + tabs + details.get(exceptions));
 
     }
+
     public static void printMethodDetails(Method method) {
 
         Map<MethodDetail, String> details = getMethodDetails(method);
@@ -190,6 +208,7 @@ public class ReflectInfo {
         System.out.println(tabs + "exceptions:" + tabs + details.get(exceptions));
 
     }
+
     public static void printMethodDetails(Class<?> inputClass, String method) {
 
         printMethodDetails(getFirstMethodByName(inputClass, method));
@@ -203,6 +222,16 @@ public class ReflectInfo {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    public static List<String> getFieldDetails(List<Field> fields) {
+
+        return fields.stream().map(f ->
+                Modifier.toString(f.getModifiers()) + " " +
+                        f.getType().getSimpleName() + " " +
+                        f.getName()).collect(Collectors.toList());
+
     }
 
 }
