@@ -5,6 +5,7 @@ import com.github.jtam2000.classdata.Person;
 import com.github.jtam2000.reflectinfo.ReflectInfo;
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -81,12 +82,6 @@ public class TestReflectInfo {
     }
 
     @Test
-    public void test_getMethodDetails() {
-
-        ReflectInfo.printMethodDetails(Person.class, "methodWithParameters");
-    }
-
-    @Test
     public void test_getMethodReturnType() {
 
         List<Method> method = ReflectInfo.getMethodsByName(Person.class, "methodReturnsDouble");
@@ -96,12 +91,29 @@ public class TestReflectInfo {
         System.out.println("return type => " + returnType);
 
         assertEquals("double", returnType);
-        assertEquals("this is a test", 1, 2);
 
     }
 
     @Test
+    public void test_getMethodDetails() {
+
+        ReflectInfo.printMethodDetails(Person.class, "methodWithParameters");
+        ReflectInfo.printMethodDetails(Person.class, "staticMethodReturnVoid");
+        ReflectInfo.printMethodDetails(Person.class, "methodReturnsDouble");
+
+
+    }
+
+
+    @Test
     public void test_getConstructors() {
+        System.out.println("Listing of Person Constructors");
+        List<Constructor<?>> constructors = ReflectInfo.getConstructors(Person.class);
+        assert constructors != null;
+        constructors.forEach(System.out::println);
+
+        System.out.println("Person Constructor Details");
+        constructors.forEach(ReflectInfo::printMethodDetails);
 
     }
 }

@@ -1,4 +1,7 @@
 # intellij and gradle ignore files
 .idea/workspace.xml
 .gradle/*/executionHistory/*
-build/*
+build/classes
+build/reports
+.gradle/buildOutputCleanup/*
+build/test-results/

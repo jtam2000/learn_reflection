@@ -1,10 +1,6 @@
 package com.github.jtam2000.reflectinfo;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -76,7 +72,7 @@ public class ReflectInfo {
                 .collect(Collectors.toList());
     }
 
-    public static List<String> getMethodParameters(Method method) {
+    public static List<String> getMethodParameters(Executable method) {
 
         Parameter[] params = method.getParameters();
 
@@ -101,8 +97,7 @@ public class ReflectInfo {
         class_name
 
     }
-
-    public static Map<MethodDetail, String> getMethodDetails(Method method) {
+    public static Map<MethodDetail, String> getMethodDetails(Executable method) {
 
         /* sample output
 
@@ -121,14 +116,12 @@ public class ReflectInfo {
         Map<MethodDetail, String> methodDetails = new HashMap<>();
 
         methodDetails.put(accessor, getModifier(method.getModifiers()));
-        methodDetails.put(returns, method.getReturnType().getSimpleName());
         methodDetails.put(method_name, method.getName());
         methodDetails.put(parameters, ReflectInfo.getMethodParameters(method).toString());
         methodDetails.put(class_package, method.getDeclaringClass().getPackage().toString());
         methodDetails.put(class_name, method.getDeclaringClass().getSimpleName());
 
         String methodName = Modifier.toString(method.getModifiers()) + " " +
-                method.getReturnType().getSimpleName() + " " +
                 method.getName() + " " +
                 "(" + String.join(", ", ReflectInfo.getMethodParameters(method)) + ")";
         methodDetails.put(javadoc_name, methodName);
@@ -139,7 +132,47 @@ public class ReflectInfo {
 
         return methodDetails;
     }
+    public static Map<MethodDetail, String> getMethodDetails(Method method) {
 
+        /* sample output
+
+        => 	public void methodWithParameters (int myInt, String myString, Instant instant)
+		package:		package com.github.jtam2000.classdata
+		class:		Person
+		accessor:		public
+		method name:		methodWithParameters
+		parameters:		[int myInt, String myString, Instant instant]
+		returns:		void
+		exceptions:		[]
+
+         */
+
+
+        Map<MethodDetail, String> methodDetails = getMethodDetails((Executable) method);
+
+        methodDetails.put(returns, method.getReturnType().getSimpleName());
+
+        String methodName = Modifier.toString(method.getModifiers()) + " " +
+                method.getReturnType().getSimpleName() + " " +
+                method.getName() + " " +
+                "(" + String.join(", ", ReflectInfo.getMethodParameters(method)) + ")";
+        methodDetails.replace(javadoc_name, methodName);
+        return methodDetails;
+    }
+
+    public static void printMethodDetails(Executable method) {
+
+        Map<MethodDetail, String> details = getMethodDetails(method);
+        String tabs = "\t\t";
+
+        System.out.println("=> " + details.get(javadoc_name));
+        System.out.println(tabs + "package:" + tabs + details.get(class_package));
+        System.out.println(tabs + "class:" + tabs + details.get(class_name));
+        System.out.println(tabs + "method name:" + tabs + details.get(method_name));
+        System.out.println(tabs + "parameters:" + tabs + details.get(parameters));
+        System.out.println(tabs + "exceptions:" + tabs + details.get(exceptions));
+
+    }
     public static void printMethodDetails(Method method) {
 
         Map<MethodDetail, String> details = getMethodDetails(method);
@@ -155,7 +188,6 @@ public class ReflectInfo {
         System.out.println(tabs + "exceptions:" + tabs + details.get(exceptions));
 
     }
-
     public static void printMethodDetails(Class<?> inputClass, String method) {
 
         printMethodDetails(getFirstMethodByName(inputClass, method));

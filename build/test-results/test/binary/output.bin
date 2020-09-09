@@ -1,8 +1,0 @@
-R=> public void methodWithParameters (int myInt, String myString, Instant instant)
-2		package:		package com.github.jtam2000.classdata
-		class:		Person
-		accessor:		public
-		returns:		void
-%		method name:		methodWithParameters
-=		parameters:		[int myInt, String myString, Instant instant]
-(		exceptions:		IllegalArgumentException
