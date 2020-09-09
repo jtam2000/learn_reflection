@@ -9,9 +9,9 @@ public class Employee extends Person{
 
     private final String companyName;
 
-    Employee(int personID, String name, int age, String companyName) {
+    Employee(String name, int age, String companyName) {
 
-        super(personID,name, age);
+        super(name, age);
                 this.companyName = companyName;
     }
 

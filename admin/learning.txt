@@ -1,0 +1,36 @@
+Reflection Learning Summary 9/9/2020
+
+-API objects: Class, Method, Field, Constructor, Parameters, Package, Module
+-Parameter allows you to get info about parameter info feed into an objecdt
+
+-DeclaredField/DeclaredMethod are those within the class, not the inherited data
+-Field/Method are PUBLIC methods in this and its object hierarchy
+    example: getDeclaredMethods(), vs getMethods()
+
+-It is a good idea to have an Object that provides convenient methods to do class reflection
+ such as ReflectionInfo.java in this project
+
+-For private Objects(fields/methods) in the class. you can use below to get access without triggering an exception
+            void setAccessible​(boolean flag)
+
+-You can get Annotation metadata that has been decorated on the method or field etc
+-you can get Generics Annotation metadata
+
+-once you find the method to a class, you can invoke it like
+    method.invoke(instance, arg1, arg2...), where instance is an actual instance that you want to invoke the method
+
+-you can load class/module by a string name like this:
+    Class.forName("com.github.jtam2000.mypackage.MyClass");
+
+Details:
+    -Constructor and Method inherit from Executable Object, so if it works for method, it should work for constructors
+    the only difference is that constructor does not have a return type
+
+    -name() vs SimpleName() for the name of the reflected object. SimpleName() does not include the package string
+
+    -To be able to get the names of the parameters to a class method, you have to compile the code with -parameters option
+        -In build.gradle,  parameter options is declared in the [compileJava] attribute
+
+    -accessor attributes such as public, static, volatile, abstract are bit-encoded in an int
+        ex: for a method: method.getModifiers(), to convert to string: Modifier.toString(method.getModifiers())
+        there is a Modifier class
