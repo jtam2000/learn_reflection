@@ -1,5 +1,26 @@
 # Macro action items for this project, not cover within the code
 
+09/10/2020:
+TODO:1. In the Reflection Project: create methods
+    -invokeStaticMethodByName(Class<?> inputClass, String methodName, methodParameters);
+    -invokeMethodByName(Class<?> inputClass, String methodName, methodParameters)
+
+TODO:2. learn to use The MethodHandle api to do reflection, continue to update this project
+    to introduce a MethodHandle module to create functions that demo the MethodHandle API and write tests to show
+    that I understand what is required and what they do
+    for example: how to create a MethodHandle for a Field, Method and for Constructors
+    and the how to invoke Methods or change fields using the Lookup object
+    This is follow the PluralSight Course: Java Fundamentals : the Java Reflection API method Handles
+
+
+TODO:3. Update the Learn JDBC Project to do Dependency Injection by using Reflection API.
+    here you want to create @Inject and @Provider Annotation on a JDBC Connection so that the main class does not
+    have a hardcoded database dependency on a Specific Database Connection like MYSql,
+     you want to demo that you can Switch from MySql
+    to H2 without affecting the functionality of the application. So you need to write a H2Provider and MySqlProvider
+    and a Coordinator/Manager class that finds the a DB provider and inject the main application with the parameterized
+    dbProvider
+
 09/08/2020
 
 what is synthetic methods and bridge methods  in java:
@@ -11,3 +32,5 @@ https://www.baeldung.com/java-synthetic
     the class initialization method, and the values and valueOf methods of the Enum class."
 
 what is native keyword> :  code that is native in another non-java language (like c++)
+
+

@@ -1,7 +1,12 @@
 Reflection Learning Summary 9/9/2020
 
+Reflection API consists of 1)Reflection API from pre-java8, and 2) MethodHandle API from 7(intro) and 8 and 9 (update)
+only use method handles if there are ACTUAL performance issues observed from using the classical Reflection API.
+most of the time, it is a waste of time to try to optimize the performance if you don't need to.
+VarHandles is only for concurrent scenarios
+
 -API objects: Class, Method, Field, Constructor, Parameters, Package, Module
--Parameter allows you to get info about parameter info feed into an objecdt
+-Parameter allows you to get info about parameter info feed into an object
 
 -DeclaredField/DeclaredMethod are those within the class, not the inherited data
 -Field/Method are PUBLIC methods in this and its object hierarchy
@@ -22,6 +27,24 @@ Reflection Learning Summary 9/9/2020
 -you can load class/module by a string name like this:
     Class.forName("com.github.jtam2000.mypackage.MyClass");
 
+    LEARNING: 9/10/2020
+-Reflection api is slow, one reason is that security checks are made every time methods/objects are accessed
+    MethodHandles was introduced in J9 to fix this performance issue
+    and VarHandle is used for concurrent scenarios
+    all security checks are stored in the Lookup object:  Lookup lookup = MethodHandles.lookup();
+    different threads may have different security levels/access
+
+-Lookup lookup = MethodHandles.lookup();   is Lookup object that you can use to make Reflection API go faster without
+    incurring the extra cost of asking for the SecurityManager
+
+-MethodHandles covers Fields and Methods and Constructors, so it can be confusing when using them
+        since the type(MethodHandles) does not tell you if you are dealing with a field or a method or a constructor
+
+-VarHandles give regular access like MethodHandles, but it also gives volatile access and Compare and Set Access
+    it deals with concurrent access.  Compare and Set is ops for Atomic types like "getAndAdd(person,1)"
+    Using VarHandles will help in scenario where you have multiple threads that can operator on the object you are
+    reflecting
+
 Details:
     -Constructor and Method inherit from Executable Object, so if it works for method, it should work for constructors
     the only difference is that constructor does not have a return type
@@ -34,3 +57,9 @@ Details:
     -accessor attributes such as public, static, volatile, abstract are bit-encoded in an int
         ex: for a method: method.getModifiers(), to convert to string: Modifier.toString(method.getModifiers())
         there is a Modifier class
+
+    -lookup.findGetter() will return a MethodHandle that allows  read access to a class field
+    -lookup.findSetter() will return one that allow you write access to a class field
+        but they do not call a setter or getter like in POJO
+        since they are both returned a MethodHandle, you can not tell what the MethodHandle can do based on just
+        the MethodHandle type.
