@@ -8,7 +8,7 @@ TODO:1. In the Reflection Project: create methods
 TODO:2. learn to use The MethodHandle api to do reflection, continue to update this project
     to introduce a MethodHandle module to create functions that demo the MethodHandle API and write tests to show
     that I understand what is required and what they do
-    for example: how to create a MethodHandle for a Field, Method and for Constructors
+    for example: how to create a MethodHandl  e for a Field, Method and for Constructors
     and the how to invoke Methods or change fields using the Lookup object
     This is follow the PluralSight Course: Java Fundamentals : the Java Reflection API method Handles
 
